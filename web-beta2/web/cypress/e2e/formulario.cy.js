@@ -1,15 +1,7 @@
 describe('template spec', () => {
-  it('passes', () => {
+  it('Preenchimento do Formulário', () => {
     cy.viewport(1440, 900)
-    cy.visit('http://localhost:3000')
-
-    cy.viewport(1440, 900)
-    cy.visit('http://localhost:3000')
-
-    cy.get('#email').type('4dt@gmail.com')
-    cy.get('#password').type('4DT')
-
-    cy.contains('button', 'Entrar').click()
+    cy.login('4dt@gmail.com', '4DT')
 
     cy.contains('h4', 'Formulários').click()
 
@@ -52,4 +44,55 @@ describe('template spec', () => {
     cy.contains('Sucesso!')
     cy.contains('Sua solicitação de consultoria foi enviada com sucesso! Em breve, nossa equipe entrará em contato através do email fornecido.')
   })
+
+  it('Validação dos Campos Obrigatórios', () => {
+    cy.viewport(1440, 900)
+    cy.login('4dt@gmail.com', '4DT')
+
+    cy.contains('h4', 'Formulários').click()
+
+    // Tenta enviar o formulário sem preencher os campos obrigatórios
+    cy.contains('button', 'Enviar formulário').click()
+
+    cy.contains('Campo obrigatório').should('have.css', 'color', 'rgb(248, 113, 113)')
+    cy.contains('Campo obrigatório').should('have.css', 'color', 'rgb(248, 113, 113)')
+    cy.contains('Você precisa aceitar os termos de uso').should('have.css', 'color', 'rgb(248, 113, 113)')
+
+    cy.get('#name').type('Murilo França')
+    cy.get('#email').type('4dt@gmail.com')
+    cy.contains('label', 'Li e aceito os termos de uso *').find('input').check().should('be.checked')
+
+    cy.contains('button', 'Enviar formulário').click()
+
+    cy.contains('Sucesso!')
+    cy.contains('Sua solicitação de consultoria foi enviada com sucesso! Em breve, nossa equipe entrará em contato através do email fornecido.')
+  })
+  // it.only('Validação de Preenchimento Correto dos Campos', () => {
+  //   cy.viewport(1440, 900)
+  //   cy.visit('http://localhost:3000')
+
+  //   cy.viewport(1440, 900)
+  //   cy.visit('http://localhost:3000')
+
+  //   cy.get('#email').type('4dt@gmail.com')
+  //   cy.get('#password').type('4DT')
+
+  //   cy.contains('button', 'Entrar').click()
+
+  //   cy.contains('h4', 'Formulários').click()
+
+  //   //Clicar no checkbox de termos de uso
+  //   cy.contains('label', 'Li e aceito os termos de uso *').find('input').check().should('be.checked')
+
+  //   cy.get('#name').type('Murilo')
+
+  //   //Tentativa de envio de email sem o "@" para verificar a validação do campo
+  //   cy.get('#email').type('4dtgmail.com')
+
+  //   cy.contains('button', 'Enviar formulário').click()
+
+  //   cy.contains('Inclua um "@" no endereço de email. "4dtgmail.com" está com um "@" faltando.')
+
+
+  // })
 })
